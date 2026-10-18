@@ -1,0 +1,288 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Standby Slayer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="noise"></div>
+  <div class="orb orb-a"></div>
+  <div class="orb orb-b"></div>
+  <div id="confettiLayer" class="confetti-layer"></div>
+
+  <main class="app-shell">
+    <nav class="topbar">
+      <div class="brand-mini">
+        <div class="mini-bolt">⚡</div>
+        <span>Standby Slayer</span>
+      </div>
+      <div class="rank-chip">
+        <span>LEVEL</span>
+        <b id="level">1</b>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <div class="hero-copy">
+        <div class="hero-kicker">
+          <span class="live-dot"></span>
+          Tonight's energy mission
+        </div>
+        <h1>Hunt the <span>energy vampires.</span></h1>
+        <p>
+          Turn your final walk around the house into a short sustainability ritual.
+          Switch off what you do not need, protect your streak, and make invisible standby use visible.
+        </p>
+
+        <div class="xp-wrap">
+          <div class="xp-meta">
+            <span>Guardian XP</span>
+            <span><b id="xpNow">0</b> / <span id="xpNext">500</span></span>
+          </div>
+          <div class="xp-track">
+            <div id="xpBar" class="xp-bar"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="streak-card">
+        <div class="streak-flame">🔥</div>
+        <div class="streak-copy">
+          <span>Current streak</span>
+          <div class="streak-line">
+            <strong id="streak">0</strong>
+            <em>nights</em>
+          </div>
+          <small>Best streak: <span id="bestStreak">0</span></small>
+        </div>
+      </div>
+    </header>
+
+    <section class="stat-row">
+      <article class="stat-card">
+        <span class="stat-icon">🏆</span>
+        <div>
+          <small>Missions cleared</small>
+          <strong id="missionsCompleted">0</strong>
+        </div>
+      </article>
+      <article class="stat-card">
+        <span class="stat-icon">⚡</span>
+        <div>
+          <small>Estimated energy avoided</small>
+          <strong><span id="kwhSaved">0.00</span> kWh</strong>
+        </div>
+      </article>
+      <article class="stat-card">
+        <span class="stat-icon">🧛</span>
+        <div>
+          <small>Vampires defeated</small>
+          <strong id="vampiresDefeated">0</strong>
+        </div>
+      </article>
+    </section>
+
+    <section class="mission-layout">
+      <article class="panel mission-panel">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Daily shutdown quest</p>
+            <h2>Clear the house before bed</h2>
+          </div>
+          <div class="mission-head-actions">
+            <button id="openManager" class="quest-settings-btn" type="button">⚙ Manage devices</button>
+            <div class="progress-pill"><span id="progressText">0 / 0</span></div>
+          </div>
+        </div>
+
+        <div class="progress-track main-progress">
+          <div id="progressBar" class="progress-bar"></div>
+        </div>
+
+        <div id="statusNudge" class="status-nudge">6 energy vampires left tonight.</div>
+
+        <div id="deviceList" class="device-list"></div>
+
+        <button id="completeBtn" class="primary-btn" disabled>
+          <span>Complete Night Mission</span>
+          <b>⚔</b>
+        </button>
+        <p class="microcopy">Illustrative estimate: indicative standby watts × 8 overnight hours.</p>
+      </article>
+
+      <aside class="sidebar-stack">
+        <section class="panel weekly-panel">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">This week</p>
+              <h2>Keep the streak alive</h2>
+            </div>
+          </div>
+          <div id="weeklyChart" class="weekly-chart"></div>
+        </section>
+
+        <section class="panel house-panel">
+          <div class="section-head house-head">
+            <div>
+              <p class="eyebrow">Live home status</p>
+              <h2 id="houseHeadline">Energy vampires awake</h2>
+            </div>
+            <span id="houseCount" class="house-count">6 awake</span>
+          </div>
+
+          <div class="house-scene" aria-label="House visual showing devices still active">
+            <svg class="moon" viewBox="0 0 32 32" aria-hidden="true">
+              <path d="M21.8 2.7c-5.8 1.1-10.2 6.2-10.2 12.3 0 6.9 5.6 12.5 12.5 12.5 2 0 3.9-.5 5.6-1.3-2.2 2.8-5.6 4.6-9.4 4.6C13.5 30.8 8 25.3 8 18.5 8 11 14.1 4.8 21.8 2.7Z"></path>
+            </svg>
+            <div class="stars">
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <div class="house">
+              <div class="roof"></div>
+              <div class="chimney"></div>
+              <div class="house-body">
+                <div class="window-grid" id="houseWindows"></div>
+                <div class="door"><span></span></div>
+              </div>
+            </div>
+            <div id="houseStatus" class="house-status">Switch off devices to darken the house.</div>
+          </div>
+        </section>
+
+        <section class="panel impact-mini-panel">
+          <div class="section-head compact-head">
+            <div>
+              <p class="eyebrow">Tonight's impact</p>
+              <h2>Small actions add up</h2>
+            </div>
+          </div>
+          <div class="impact-metrics">
+            <div>
+              <span id="tonightImpactLabel">Tonight's potential</span>
+              <strong id="tonightPotential">0.000 kWh</strong>
+            </div>
+            <div>
+              <span>7-night potential</span>
+              <strong id="weekPotential">0.00 kWh</strong>
+            </div>
+            <div>
+              <span>30-night potential</span>
+              <strong id="monthPotential">0.00 kWh</strong>
+            </div>
+          </div>
+          <p class="impact-note">Estimated from your current device list and 8 overnight hours.</p>
+        </section>
+
+        <section class="panel badges-panel">
+          <div class="section-head compact-head">
+            <div>
+              <p class="eyebrow">Achievements</p>
+              <h2>Night Guardian badges</h2>
+            </div>
+          </div>
+          <div id="badgeGrid" class="badge-grid"></div>
+        </section>
+      </aside>
+    </section>
+
+    <footer>
+      <span>Standby Slayer prototype</span>
+      <span>Built as a digital behaviour-change intervention for household energy use.</span>
+    </footer>
+  </main>
+
+  <div id="victoryModal" class="modal-backdrop">
+    <div class="victory-modal">
+      <div class="victory-badge">⚡</div>
+      <p class="eyebrow">Mission complete</p>
+      <h2>House secured.</h2>
+      <p id="victoryText">You defeated every energy vampire tonight.</p>
+      <div class="victory-stat">
+        <span>Estimated energy avoided</span>
+        <strong id="victoryKwh">0.000 kWh</strong>
+      </div>
+      <button id="closeVictory" class="primary-btn">Claim XP + Continue</button>
+    </div>
+  </div>
+
+  <div id="managerModal" class="modal-backdrop">
+    <div class="manager-modal">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Household setup</p>
+          <h2>Manage household devices</h2>
+        </div>
+        <button id="closeManager" class="ghost-btn">Close</button>
+      </div>
+
+      <form id="addDeviceForm" class="device-form device-form-presets">
+        <label>
+          Device type
+          <select id="deviceType">
+            <option value="TV / Streaming Setup" data-watts="4">TV / Streaming Setup</option>
+            <option value="Gaming Console" data-watts="10">Gaming Console</option>
+            <option value="Desk Monitor" data-watts="3">Desk Monitor</option>
+            <option value="Air-conditioner" data-watts="2">Air-conditioner</option>
+            <option value="Chargers & Adapters" data-watts="2.5">Chargers & Adapters</option>
+            <option value="Kitchen Counter Appliances" data-watts="4.5">Kitchen Counter Appliances</option>
+            <option value="Printer" data-watts="2">Printer</option>
+            <option value="Other" data-watts="2">Other</option>
+          </select>
+        </label>
+
+        <label id="customNameWrap" class="hidden-field">
+          Device name
+          <input id="customDeviceName" placeholder="e.g. Soundbar" />
+        </label>
+
+        <label>
+          Room
+          <input id="deviceRoom" placeholder="e.g. Study" />
+        </label>
+
+        <div class="estimate-box">
+          <span>Estimated standby</span>
+          <strong id="presetWattsDisplay">~4.0W</strong>
+          <small>Indicative estimate based on device type.</small>
+
+          <label class="custom-estimate-toggle">
+            <input id="useCustomEstimate" type="checkbox" />
+            <span>Use custom estimate</span>
+          </label>
+
+          <label id="customWattsWrap" class="custom-watts-wrap hidden-field">
+            Custom standby watts
+            <input id="deviceWatts" type="number" min="0.1" max="100" step="0.1" value="4" />
+          </label>
+        </div>
+
+        <button class="secondary-btn add-device-btn" type="submit">Add device</button>
+      </form>
+
+      <div class="manager-note">
+        Choose a device type and Standby Slayer will apply an indicative standby estimate automatically. If you know a more accurate figure, you can override it.
+      </div>
+
+      <div class="manager-list-wrap">
+        <div class="manager-list-head">
+          <span>Your devices</span>
+          <span id="managerDeviceCount">0 devices</span>
+        </div>
+        <div id="managerDeviceList" class="manager-device-list"></div>
+      </div>
+
+      <div class="manager-actions">
+        <button id="resetBtn" class="ghost-btn">Reset today</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
